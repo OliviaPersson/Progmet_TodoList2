@@ -45,7 +45,7 @@ namespace Progmet_TodoList2
                         quit = QuitProgram(moveItems, delTask, addTask, setState, quit);
                         break;
                     case "load":
-                        fileName = LoadTodoFile(commandWord, todoList);
+                        fileName = LoadFile(commandWord, todoList);
                         break;
                     case "show":
                         ShowTodoList(commandWord, todoList);
@@ -78,7 +78,7 @@ namespace Progmet_TodoList2
 
         private static bool QuitProgram(bool moveItems, bool delTask, bool addTask, bool setState, bool quit)
         {
-            if (moveItems == true || delTask == true || addTask == true || setState == true)
+            if (moveItems || delTask || addTask || setState)
             {
                 Console.WriteLine("Vill du spara ändringarna 'ja/nej'?");
                 string answer = Console.ReadLine();
@@ -118,10 +118,10 @@ namespace Progmet_TodoList2
                 fileName = commandWord[1];
             }
             using (StreamWriter writer = new StreamWriter(fileName))
-                for (int i = 0; i < todoList.Count(); i++)
-                {
-                    writer.WriteLine($"{todoList[i].date}#{todoList[i].state}#{todoList[i].title}");
-                }
+            for (int i = 0; i < todoList.Count(); i++)
+            {
+                writer.WriteLine($"{todoList[i].date}#{todoList[i].state}#{todoList[i].title}");
+            }
             return fileName;
         }
 
@@ -220,7 +220,7 @@ namespace Progmet_TodoList2
             Console.WriteLine("----------------------------------------");
         }
 
-        private static string LoadTodoFile(string[] commandWord, List<Activity> todoList)
+        private static string LoadFile(string[] commandWord, List<Activity> todoList)
         {
             string fileName = commandWord[1];
             Console.WriteLine("Reading file {0}", fileName);
@@ -231,7 +231,6 @@ namespace Progmet_TodoList2
                     string line = file.ReadLine();
                     string[] word = line.Split('#');
                     Activity A = new Activity(word[0], word[1], word[2]);
-                    //Console.WriteLine("{0} - {1} - {2}", A.date, A.state, A.title);
                     todoList.Add(A);
                 }
             }
