@@ -22,6 +22,11 @@ namespace Progmet_TodoList2
         }
         static void Main(string[] args)
         {
+            bool moveItems = false;
+            bool delTask = false;
+            bool addTask = false;
+            bool setState = false;
+            bool quit = false;
             string[] commandWord;
             List<Activity> todoList = new List<Activity>();
             string fileName = @"C:\Users\Olivi\todo.lis";
@@ -37,7 +42,29 @@ namespace Progmet_TodoList2
                 switch (commandWord[0])
                 {
                     case "quit":
-                        Console.WriteLine("Bye!");
+                        if (moveItems == true || delTask == true || addTask == true || setState == true)
+                        {
+                            Console.WriteLine("Vill du spara ändringarna 'ja/nej'?");
+                            string answer = Console.ReadLine();
+                            if(answer == "nej")
+                            {
+                                Console.WriteLine("Bye!");
+                                quit = true;
+                            }
+                            else if (answer == "ja")
+                            {
+                                Console.WriteLine("Skriv 'save' för att spara");
+                            }
+                            else
+                            {
+                                Console.WriteLine("{0} is an unknown command", answer);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Bye!");
+                            quit = true;
+                        }
                         break;
                     case "load":
                         fileName = LoadTodoFile(commandWord, todoList);
@@ -46,30 +73,35 @@ namespace Progmet_TodoList2
                         ShowTodoList(commandWord, todoList);
                         break;
                     case "move":
-                        MoveItemsInList(commandWord, todoList);
+                        moveItems = MoveItemsInList(commandWord, todoList);
                         break;
                     case "delete":
-                        DeleteTask(commandWord, todoList);
+                        delTask = DeleteTask(commandWord, todoList);
                         break;
                     case "add":
-                        AddNewActivity(commandWord, todoList);
+                        addTask = AddNewActivity(commandWord, todoList);
                         break;
                     case "set":
-                        ChangeState(commandWord, todoList);
+                        setState = ChangeStateOfTask(commandWord, todoList);
                         break;
                     case "save":
                         fileName = Save(commandWord, todoList, fileName);
+                        moveItems = false;
+                        delTask = false;
+                        addTask = false;
+                        setState = false;
                         break;
                     default:
                         Console.WriteLine("{0} is an unknown command", commandWord[0]);
                         break;
                 }
-            } while (commandWord[0] != "quit");
+            } while (quit != true);
         }
 
-        private static void AddNewActivity(string[] commandWord, List<Activity> todoList)
+        private static bool AddNewActivity(string[] commandWord, List<Activity> todoList)
         {
             todoList.Add(new Activity(commandWord[1], "v", commandWord[2]));
+            return true;
         }
 
         private static string Save(string[] commandWord, List<Activity> todoList, string fileName)
@@ -86,7 +118,7 @@ namespace Progmet_TodoList2
             return fileName;
         }
 
-        private static void ChangeState(string[] commandWord, List<Activity> todoList)
+        private static bool ChangeStateOfTask(string[] commandWord, List<Activity> todoList)
         {
             for (int i = 0; i < todoList.Count(); i++)
             {
@@ -95,31 +127,37 @@ namespace Progmet_TodoList2
                     if (commandWord[2] == "avklarad")
                     {
                         todoList[i].state = "*";
+                        return true;
                     }
                     else if (commandWord[2] == "pågående")
                     {
                         todoList[i].state = "P";
+                        return true;
                     }
                     else if (commandWord[2] == "väntar")
                     {
                         todoList[i].state = "v";
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
-        private static void DeleteTask(string[] commandWord, List<Activity> todoList)
+        private static bool DeleteTask(string[] commandWord, List<Activity> todoList)
         {
             for (int i = 0; i < todoList.Count(); i++)
             {
                 if (commandWord[1] == (i + 1).ToString())
                 {
                     todoList.Remove(todoList[i]);
+                    return true;
                 }
             }
+            return false;
         }
 
-        private static void MoveItemsInList(string[] commandWord, List<Activity> todoList)
+        private static bool MoveItemsInList(string[] commandWord, List<Activity> todoList)
         {
             for (int i = 0; i < todoList.Count(); i++)
             {
@@ -132,6 +170,7 @@ namespace Progmet_TodoList2
 
                         todoList.RemoveAt(i);
                         todoList.Insert(i - 1, item);
+                        return true;
                     }
                 }
                 else if (commandWord[2] == "down")
@@ -143,9 +182,11 @@ namespace Progmet_TodoList2
 
                         todoList.RemoveAt(i);
                         todoList.Insert(i + 1, item);
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         private static void ShowTodoList(string[] commandWord, List<Activity> todoList)
