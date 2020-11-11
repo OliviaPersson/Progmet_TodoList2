@@ -42,29 +42,7 @@ namespace Progmet_TodoList2
                 switch (commandWord[0])
                 {
                     case "quit":
-                        if (moveItems == true || delTask == true || addTask == true || setState == true)
-                        {
-                            Console.WriteLine("Vill du spara ändringarna 'ja/nej'?");
-                            string answer = Console.ReadLine();
-                            if(answer == "nej")
-                            {
-                                Console.WriteLine("Bye!");
-                                quit = true;
-                            }
-                            else if (answer == "ja")
-                            {
-                                Console.WriteLine("Skriv 'save' för att spara");
-                            }
-                            else
-                            {
-                                Console.WriteLine("{0} is an unknown command", answer);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Bye!");
-                            quit = true;
-                        }
+                        quit = QuitProgram(moveItems, delTask, addTask, setState, quit);
                         break;
                     case "load":
                         fileName = LoadTodoFile(commandWord, todoList);
@@ -96,6 +74,35 @@ namespace Progmet_TodoList2
                         break;
                 }
             } while (quit != true);
+        }
+
+        private static bool QuitProgram(bool moveItems, bool delTask, bool addTask, bool setState, bool quit)
+        {
+            if (moveItems == true || delTask == true || addTask == true || setState == true)
+            {
+                Console.WriteLine("Vill du spara ändringarna 'ja/nej'?");
+                string answer = Console.ReadLine();
+                if (answer == "nej")
+                {
+                    Console.WriteLine("Bye!");
+                    quit = true;
+                }
+                else if (answer == "ja")
+                {
+                    Console.WriteLine("Skriv 'save' för att spara");
+                }
+                else
+                {
+                    Console.WriteLine("{0} is an unknown command", answer);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Bye!");
+                quit = true;
+            }
+
+            return quit;
         }
 
         private static bool AddNewActivity(string[] commandWord, List<Activity> todoList)
@@ -161,25 +168,18 @@ namespace Progmet_TodoList2
         {
             for (int i = 0; i < todoList.Count(); i++)
             {
-                if (commandWord[2] == "up")
+                int position = i + 1;
+                Activity item = todoList[i];
+                if (commandWord[1].Equals(position.ToString()))
                 {
-                    int position = i + 1;
-                    if (commandWord[1].Equals(position.ToString()))
+                    if (commandWord[2] == "up")
                     {
-                        Activity item = todoList[i];
-
                         todoList.RemoveAt(i);
                         todoList.Insert(i - 1, item);
                         return true;
                     }
-                }
-                else if (commandWord[2] == "down")
-                {
-                    int position = i + 1;
-                    if (commandWord[1].Equals(position.ToString()))
+                    else if (commandWord[2] == "down")
                     {
-                        Activity item = todoList[i];
-
                         todoList.RemoveAt(i);
                         todoList.Insert(i + 1, item);
                         return true;
