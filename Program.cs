@@ -9,6 +9,9 @@ namespace Progmet_TodoList2
 {
     class Program
     {
+        /* CLASS: Activity
+         * PURPOSE: Create an object with tree attributes and a constructor that will run when the class is initiated
+         */
         class Activity
         {
             public string date, state, title;
@@ -75,7 +78,11 @@ namespace Progmet_TodoList2
                 }
             } while (quit != true);
         }
-
+        /* METHOD: QuitProgram (static)
+         * PURPOSE: Quits program and asks user to save changes before closing the program
+         * PARAMETERS: moveItems, delTask, addTask, setState - determens if there are changes in the list
+         * RETURN VALUE: Returns true or false in Quit variable depending on whether a change has been made
+         */
         private static bool QuitProgram(bool moveItems, bool delTask, bool addTask, bool setState, bool quit)
         {
             if (moveItems || delTask || addTask || setState)
@@ -101,16 +108,23 @@ namespace Progmet_TodoList2
                 Console.WriteLine("Bye!");
                 quit = true;
             }
-
             return quit;
         }
-
+        /* METHOD: AddNewActivity (static)
+         * PURPOSE: Adds new activity with date and title
+         * PARAMETERS: commandWord - user input, todolist - List that contains todo items
+         * RETURN VALUE: Returns the value true if new activity has been added
+         */
         private static bool AddNewActivity(string[] commandWord, List<Activity> todoList)
         {
             todoList.Add(new Activity(commandWord[1], "v", commandWord[2]));
             return true;
         }
-
+        /* METHOD: Save (static)
+         * PURPOSE: Saves the changes
+         * PARAMETERS: commandWord - user input, todolist - List that contains todo items, fileName - stores current filepath
+         * RETURN VALUE: Returns file path in fileName variable
+         */
         private static string Save(string[] commandWord, List<Activity> todoList, string fileName)
         {
             if (commandWord.Length > 1)
@@ -124,7 +138,11 @@ namespace Progmet_TodoList2
             }
             return fileName;
         }
-
+        /* METHOD: ChangeStateOfTask (static)
+         * PURPOSE: Changes the status of the task depending on input commandWord[1]
+         * PARAMETERS: commandWord - user input, todolist - List that contains todo items
+         * RETURN VALUE: Returns the value true if status has been updated
+         */
         private static bool ChangeStateOfTask(string[] commandWord, List<Activity> todoList)
         {
             for (int i = 0; i < todoList.Count(); i++)
@@ -150,7 +168,11 @@ namespace Progmet_TodoList2
             }
             return false;
         }
-
+        /* METHOD: DeleteTask (static)
+         * PURPOSE: Delete task depending on input commandWord[1]
+         * PARAMETERS: commandWord - user input, todolist - List that contains todo items
+         * RETURN VALUE: Return true if status has been updated and false if not
+         */
         private static bool DeleteTask(string[] commandWord, List<Activity> todoList)
         {
             for (int i = 0; i < todoList.Count(); i++)
@@ -163,7 +185,11 @@ namespace Progmet_TodoList2
             }
             return false;
         }
-
+        /* METHOD: MoveItemsInList (static)
+         * PURPOSE: Moves an activity up or down depending on input in commandWord[1]
+         * PARAMETERS: commandWord - user input, todolist - List that contains todo items
+         * RETURN VALUE: Return true if activity in list has been updated and false if not
+         */
         private static bool MoveItemsInList(string[] commandWord, List<Activity> todoList)
         {
             for (int i = 0; i < todoList.Count(); i++)
@@ -188,7 +214,10 @@ namespace Progmet_TodoList2
             }
             return false;
         }
-
+        /* METHOD: ShowTodoList (static)
+         * PURPOSE: Shows todolist depending on input in commandWord[1]
+         * PARAMETERS: commandWord - user input, todolist - List that contains todo items
+         */
         private static void ShowTodoList(string[] commandWord, List<Activity> todoList)
         {
             Console.WriteLine("N  Datum  S Rubrik");
@@ -219,7 +248,11 @@ namespace Progmet_TodoList2
             }
             Console.WriteLine("----------------------------------------");
         }
-
+        /* METHOD: LoadFile (static)
+         * PURPOSE: Read file line by line and split line '#' and add in List Activity todolist
+         * PARAMETERS:  commandWord - user input, todolist - List that will contain todo items
+         * RETURN VALUE: Returns filepath in variable fileName
+         */
         private static string LoadFile(string[] commandWord, List<Activity> todoList)
         {
             string fileName = commandWord[1];
